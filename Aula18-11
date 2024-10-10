@@ -1,0 +1,34 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const Auth = () => {
+    const [nome, setNome] = useState('');
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+    const [isLogin, setIsLogin] = useState(true);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const url = isLogin ? '/api/auth/login' : '/api/auth/register';
+        try {
+            const res = await axios.post(url, { nome, email, senha });
+            console.log(res.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            {!isLogin && <input value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Nome" />}
+            <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
+            <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="Senha" />
+            <button type="submit">{isLogin ? 'Login' : 'Registrar'}</button>
+            <button type="button" onClick={() => setIsLogin(!isLogin)}>
+                {isLogin ? 'Criar conta' : 'Já tem conta?'}
+            </button>
+        </form>
+    );
+};
+
+export default Auth;
